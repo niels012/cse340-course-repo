@@ -3,6 +3,9 @@ import express from 'express';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
+import { testConnection } from './src/models/db.js';
+import { getAllOrganizations } from './src/models/organizations.js';
+
 // Define the application environment
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
 // Define the port number the server will listen on
@@ -13,6 +16,8 @@ const __dirname = path.dirname(__filename);
 
 
 const app = express();
+
+console.log('SERVER.JS IS STARTING...');
 
 /**
   * Configure Express middleware
@@ -31,28 +36,35 @@ app.set('views', path.join(__dirname, 'src/views'));
   * Routes
   */
 app.get('/', async (req, res) => {
-    const title = 'Home';
-    res.render('home', { title });
+  const title = 'Home';
+  res.render('home', { title });
 });
 
-app.get('/organizations', (req, res) => {
-    const title = 'Our Partner Organizations';
-    res.render('organizations', { title });
+app.get('/organizations', async (req, res) => {
+  const organizations = await getAllOrganizations();
+  console.log(organizations);
+  const title = 'Our Partner Organizations';
+  res.render('organizations', { title });
 });
 
 app.get('/projects', (req, res) => {
-    const title = 'Service Projects';
-    res.render('projects', { title });
+  const title = 'Service Projects';
+  res.render('projects', { title });
 });
 
 app.get('/categories', (req, res) => {
-    const title = 'Service Categories';
-    res.render('categories', { title });
+  const title = 'Service Categories';
+  res.render('categories', { title });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  try {
+    await testConnection();
     console.log(`Server is running at http://127.0.0.1:${PORT}`);
     console.log(`Environment: ${NODE_ENV}`);
+  } catch (error) {
+    console.error('Error connecting to the database:', error);
+  }
 });
 
 
