@@ -72,12 +72,22 @@ a:focus {
 
 /* Navigation Styles */
 nav {
-    background-color: #7c2c2c;
-    padding: 1rem 0;
+    background: linear-gradient(135deg, #6a2424 0%, #7c2c2c 50%, #a41e34 100%);
+    padding: 0.75rem 0;
     position: sticky;
-
+    top: 0;
     z-index: 100;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.nav-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
 }
 
 nav ul {
@@ -85,10 +95,7 @@ nav ul {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 0.5rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
+    gap: 0.25rem;
 }
 
 nav li {
@@ -98,22 +105,48 @@ nav li {
 nav a {
     color: #ffffff;
     font-weight: 500;
-    padding: 0.75rem 1.25rem;
+    letter-spacing: 0.02em;
+    padding: 0.6rem 1rem;
     display: flex;
     align-items: center;
-    border-radius: 4px;
-    transition: all 0.3s ease;
+    border-radius: 6px;
+    overflow: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
     position: relative;
 }
 
+/* Gold underline that grows on hover and stays on the active page */
+nav ul a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background-color: #ffd700;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
 nav a:hover {
-    background-color: #a41e34;
+    background-color: rgba(255, 255, 255, 0.12);
     color: #ffffff;
     text-decoration: none;
+    outline: none;
+}
+
+nav ul a:hover::after,
+nav ul a[aria-current="page"]::after {
+    transform: scaleX(1);
+}
+
+nav a[aria-current="page"] {
+    background-color: rgba(255, 255, 255, 0.18);
+    font-weight: 600;
 }
 
 nav a:focus {
-    background-color: #a41e34;
+    background-color: rgba(255, 255, 255, 0.18);
     color: #ffffff;
     outline: 2px solid #ffd700;
     outline-offset: 2px;
@@ -211,6 +244,68 @@ main > ul > li a:hover {
     text-decoration: underline;
 }
 
+/* Project List (schedule-style rows, not cards) */
+.project-list {
+    display: block;
+    margin-top: 1.5rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.project-list > li {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    padding: 1.1rem 1rem;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #dee2e6;
+    border-radius: 0;
+    box-shadow: none;
+    text-align: left;
+    transition: background-color 0.2s ease;
+}
+
+.project-list > li:hover {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    box-shadow: none;
+    transform: none;
+}
+
+.project-date {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #7c2c2c;
+    font-variant-numeric: tabular-nums;
+}
+
+.project-details {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 0.5rem;
+}
+
+.project-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #1a1a1a;
+}
+
+.project-org {
+    font-size: 0.95rem;
+    color: #5f6b76;
+}
+
+@media (min-width: 768px) {
+    .project-list > li {
+        grid-template-columns: 11rem 1fr;
+        column-gap: 2rem;
+        align-items: baseline;
+    }
+}
+
 /* Footer */
 body > footer {
     background-color: #7c2c2c;
@@ -251,10 +346,14 @@ body > footer a:hover {
         padding: 3rem 2rem;
     }
 
-    nav ul {
-        gap: 1rem;
-        justify-content: flex-start;
+    .nav-container {
+        flex-direction: row;
+        justify-content: space-between;
         padding: 0 2rem;
+    }
+
+    nav ul {
+        gap: 0.5rem;
     }
 
     .main-logo {
@@ -272,7 +371,7 @@ body > footer a:hover {
         padding: 3rem;
     }
 
-    nav ul {
+    .nav-container {
         padding: 0 3rem;
     }
 

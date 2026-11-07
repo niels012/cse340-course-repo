@@ -24,8 +24,20 @@ VALUES
      'hello@unityserve.org',
      'unityserve-logo.png');
 
+-- ========================================
+-- Table: Service Projects
+-- ========================================
+CREATE TABLE service_projects (
+    project_id serial PRIMARY KEY,
+    organization_id integer NOT NULL
+        REFERENCES organizations (organization_id),
+    title varchar(150) NOT NULL,
+    description TEXT NOT NULL,
+    location varchar(255) NOT NULL,
+    project_date date NOT NULL
+);
 
- -- ========================================
+-- ========================================
 -- Insert sample data: Service Projects
 -- ========================================
 INSERT INTO service_projects (organization_id, title, description, location, project_date)
@@ -81,3 +93,54 @@ VALUES
         'Pick up litter and clear debris from streets, sidewalks, and storm drains.',
         'Meet at City Hall Plaza, 1 Civic Center', '2027-04-10');
    
+
+-- ========================================
+-- Table: Categories
+-- ========================================
+CREATE TABLE categories (
+    category_id serial PRIMARY KEY,
+    name varchar(100) NOT NULL UNIQUE
+);
+
+-- ========================================
+-- Junction table: Service Projects <-> Categories (many-to-many)
+-- ========================================
+CREATE TABLE project_categories (
+    project_id integer NOT NULL
+        REFERENCES service_projects (project_id) ON DELETE CASCADE,
+    category_id integer NOT NULL
+        REFERENCES categories (category_id) ON DELETE CASCADE,
+    PRIMARY KEY (project_id, category_id)
+);
+
+-- ========================================
+-- Insert sample data: Categories
+-- ========================================
+INSERT INTO categories (name)
+VALUES
+    ('Construction & Repair'),   -- 1
+    ('Environmental'),           -- 2
+    ('Education'),               -- 3
+    ('Food & Hunger Relief'),    -- 4
+    ('Community Outreach');      -- 5
+
+-- ========================================
+-- Insert sample data: Project Categories
+-- ========================================
+INSERT INTO project_categories (project_id, category_id)
+VALUES
+    (1, 1), (1, 2),     -- Park Bench Restoration
+    (2, 1), (2, 5),     -- Playground Rebuild
+    (3, 1), (3, 5),     -- Senior Home Accessibility Ramps
+    (4, 1),             -- Community Center Repainting
+    (5, 1), (5, 2),     -- Trail Bridge Construction
+    (6, 2),             -- Community Garden Winter Prep
+    (7, 2), (7, 3),     -- Composting Workshop
+    (8, 2), (8, 3),     -- School Garden Planting Day
+    (9, 2),             -- Seed Library Sorting
+    (10, 2), (10, 4),   -- Spring Harvest Food Share
+    (11, 4), (11, 5),   -- Thanksgiving Food Drive
+    (12, 5),            -- Winter Coat Collection
+    (13, 4), (13, 5),   -- Homeless Shelter Meal Service
+    (14, 3),            -- Literacy Tutoring Night
+    (15, 2), (15, 5);   -- Neighborhood Cleanup Day

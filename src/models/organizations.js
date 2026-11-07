@@ -3,7 +3,8 @@ import db from './db.js'
 const getAllOrganizations = async() => {
     const query = `
         SELECT organization_id, name, description, email, logo_filename
-      FROM public.organizations;
+      
+        FROM public.organizations;
     `;
 
     const result = await db.query(query);
