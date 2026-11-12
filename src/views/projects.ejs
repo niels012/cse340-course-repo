@@ -2,17 +2,19 @@
 
 <main>
     <h1><%= title %></h1>
-    <h2>Upcoming Service Projects</h2>
+    <% if (projects.length === 0) { %>
+        <p>There are no upcoming service projects right now.</p>
+    <% } %>
     <ul class="project-list">
         <% projects.forEach(project => { %>
-            <% const projectDate = new Date(project.project_date); %>
+            <% const projectDate = new Date(project.date); %>
             <li>
                 <span class="project-date">
                     <time datetime="<%= projectDate.toLocaleDateString('en-CA') %>"><%= projectDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></time>:
                 </span>
                 <span class="project-details">
-                    <span class="project-title"><%= project.title %></span>
-                    <span class="project-org">(<%= project.organization_name %>)</span>
+                    <a class="project-title" href="/project/<%= project.project_id %>"><%= project.title %></a>
+                    <span class="project-org">(<a href="/organization/<%= project.organization_id %>"><%= project.organization_name %></a>)</span>
                 </span>
             </li>
         <% }); %>

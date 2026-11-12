@@ -298,6 +298,33 @@ main > ul > li a:hover {
     color: #5f6b76;
 }
 
+a.project-title {
+    color: #7c2c2c;
+    font-size: 1.1rem;
+}
+
+/* Detail pages (single project / organization) */
+.detail-list {
+    margin: 1.5rem 0;
+}
+
+.detail-list dt {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #7c2c2c;
+}
+
+.detail-list dd {
+    margin-bottom: 1rem;
+}
+
+.detail-logo {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
 @media (min-width: 768px) {
     .project-list > li {
         grid-template-columns: 11rem 1fr;
