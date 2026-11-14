@@ -1,14 +1,30 @@
 <%- include('partials/header') %>
 
 <main>
-    <h1><%= title %></h1>
-    <img class="detail-logo" src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo">
-    <dl class="detail-list">
-        <dt>Description</dt>
-        <dd><%= organization.description %></dd>
-        <dt>Contact</dt>
-        <dd><a href="mailto:<%= organization.email %>"><%= organization.email %></a></dd>
-    </dl>
+    <article class="org-profile">
+        <header class="org-header">
+            <div>
+                <p class="org-eyebrow">Partner Organization</p>
+                <h1><%= title %></h1>
+            </div>
+            <img class="org-header-logo" src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo">
+        </header>
+
+        <div class="org-body">
+            <section class="org-about">
+                <h2>About</h2>
+                <p><%= organization.description %></p>
+            </section>
+
+            <aside class="org-contact">
+                <h2>Contact</h2>
+                <p class="org-contact-label">Email</p>
+                <p class="org-contact-value"><a href="mailto:<%= organization.email %>"><%= organization.email %></a></p>
+                <a class="button" href="mailto:<%= organization.email %>">Send an email</a>
+            </aside>
+        </div>
+    </article>
+
     <p><a class="back-link" href="/organizations">&larr; Back to organizations</a></p>
 </main>
 

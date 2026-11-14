@@ -244,6 +244,28 @@ main > ul > li a:hover {
     text-decoration: underline;
 }
 
+/* Organization cards: the name link stretches to cover the whole card */
+.org-list > li {
+    position: relative;
+}
+
+.org-list > li a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+}
+
+.org-list > li a:hover,
+.org-list > li a:focus {
+    outline: none;
+}
+
+.org-list > li:focus-within {
+    outline: 2px solid #a41e34;
+    outline-offset: 2px;
+}
+
 /* Project List (schedule-style rows, not cards) */
 .project-list {
     display: block;
@@ -329,6 +351,128 @@ a.project-title {
     display: inline-block;
     margin-top: 1rem;
     font-weight: 600;
+}
+
+/* Organization profile page */
+.org-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding-bottom: 1.75rem;
+    border-bottom: 3px solid #a41e34;
+}
+
+.org-header-logo {
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+    padding: 0.75rem;
+    object-fit: contain;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.org-eyebrow {
+    margin-bottom: 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #a41e34;
+}
+
+body > main .org-header h1 {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+    font-size: 2rem;
+    overflow-wrap: anywhere;
+}
+
+.org-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+body > main .org-body h2 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 1.15rem;
+    color: #1a1a1a;
+}
+
+.org-about p {
+    max-width: 65ch;
+    margin-bottom: 0;
+    font-size: 1.05rem;
+    color: #3d4a57;
+}
+
+.org-contact {
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-top: 4px solid #a41e34;
+    border-radius: 8px;
+}
+
+.org-contact-label {
+    margin-bottom: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #5f6b76;
+}
+
+.org-contact-value {
+    margin-bottom: 1.25rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.button {
+    display: block;
+    padding: 0.7rem 1.25rem;
+    font-weight: 600;
+    text-align: center;
+    color: #ffffff;
+    background-color: #a41e34;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.button:hover,
+.button:focus {
+    color: #ffffff;
+    background-color: #7c2c2c;
+    text-decoration: none;
+}
+
+@media (min-width: 768px) {
+    .org-header {
+        gap: 1.75rem;
+    }
+
+    .org-header-logo {
+        width: 120px;
+        height: 120px;
+    }
+
+    body > main .org-header h1 {
+        font-size: 2.5rem;
+    }
+
+    .org-body {
+        grid-template-columns: minmax(0, 1fr) 20rem;
+        gap: 3rem;
+        align-items: start;
+    }
 }
 
 /* Category cards (whole card is the link) */
