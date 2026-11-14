@@ -2,9 +2,9 @@
     <%- include('partials/header') %>
     <main>
         <h1><%= title %></h1>
-        <ul>
+        <ul class="category-list">
             <% categories.forEach(category => { %>
-            <li><%= category.name %></li>
+            <li><a href="/category/<%= category.category_id %>"><%= category.name %></a></li>
             <% }) %>
         </ul>
     </main>

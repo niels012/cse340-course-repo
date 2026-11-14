@@ -1,7 +1,6 @@
-// Import any needed model functions
-import { getAllCategories } from '../models/categories.js';
+import { getAllCategories, getCategoryById } from '../models/categories.js';
+import { getProjectsByCategoryId } from '../models/projects.js';
 
-// Define any controller functions
 const showCategoriesPage = async (req, res) => {
     const categories = await getAllCategories();
     const title = 'Service Categories';
@@ -9,5 +8,17 @@ const showCategoriesPage = async (req, res) => {
     res.render('categories', { title, categories });
 };
 
-// Export any controller functions
-export { showCategoriesPage };
+const showCategoryDetailsPage = async (req, res) => {
+    const id = Number(req.params.id);
+    const category = Number.isInteger(id) ? await getCategoryById(id) : null;
+
+    if (!category) {
+        return res.status(404).send('Category not found');
+    }
+
+    const projects = await getProjectsByCategoryId(id);
+
+    res.render('category', { title: category.name, category, projects });
+};
+
+export { showCategoriesPage, showCategoryDetailsPage };

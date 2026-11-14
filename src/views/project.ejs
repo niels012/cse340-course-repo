@@ -4,6 +4,14 @@
     <h1><%= title %></h1>
     <% const projectDate = new Date(project.date); %>
     <dl class="detail-list">
+        <dt>Categories</dt>
+        <dd>
+            <ul class="tag-list">
+                <% categories.forEach(category => { %>
+                <li><a class="tag" href="/category/<%= category.category_id %>"><%= category.name %></a></li>
+                <% }) %>
+            </ul>
+        </dd>
         <dt>Date</dt>
         <dd><time datetime="<%= projectDate.toLocaleDateString('en-CA') %>"><%= projectDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></time></dd>
         <dt>Location</dt>
@@ -13,7 +21,7 @@
         <dt>Description</dt>
         <dd><%= project.description %></dd>
     </dl>
-    <p><a href="/projects">&larr; Back to service projects</a></p>
+    <p><a class="back-link" href="/projects">&larr; Back to service projects</a></p>
 </main>
 
 <%- include('partials/footer') %>
