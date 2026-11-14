@@ -1,5 +1,6 @@
 import { getAllOrganizations, getOrganizationById } from '../models/organizations.js';
 
+// Define any controller functions
 const showOrganizationsPage = async (req, res) => {
     const organizations = await getAllOrganizations();
     const title = 'Our Partner Organizations';
@@ -7,7 +8,8 @@ const showOrganizationsPage = async (req, res) => {
     res.render('organizations', { title, organizations });
 };
 
-const showOrganizationDetailsPage = async (req, res) => {
+
+const organizationDetailsPage = async (req, res) => {
     const id = Number(req.params.id);
     const organization = Number.isInteger(id) ? await getOrganizationById(id) : null;
 
@@ -18,4 +20,8 @@ const showOrganizationDetailsPage = async (req, res) => {
     res.render('organization', { title: organization.name, organization });
 };
 
-export { showOrganizationsPage, showOrganizationDetailsPage };
+export { showOrganizationsPage, organizationDetailsPage };
+
+
+
+

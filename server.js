@@ -1,23 +1,19 @@
 import express from 'express';
-
 import { fileURLToPath } from 'url';
 import path from 'path';
-
 import { testConnection } from './src/models/db.js';
 import router from './src/routes.js';
 
 // Define the application environment
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
+
 // Define the port number the server will listen on
 const PORT = process.env.PORT || 3000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 const app = express();
-
-console.log('SERVER.JS IS STARTING...');
 
 /**
   * Configure Express middleware
@@ -31,12 +27,6 @@ app.set('view engine', 'ejs');
 
 // Tell Express where to find your templates
 app.set('views', path.join(__dirname, 'src/views'));
-
-// Make the current path available to all views (used to highlight the active nav link)
-app.use((req, res, next) => {
-  res.locals.currentPath = req.path;
-  next();
-});
 
 // Middleware to log all incoming requests
 app.use((req, res, next) => {
@@ -52,10 +42,36 @@ app.use((req, res, next) => {
     next();
 });
 
-/**
-  * Routes
-  */
+// Use the imported router to handle routes
 app.use(router);
+
+// Catch-all route for 404 errors
+app.use((req, res, next) => {
+    const err = new Error('Page Not Found');
+    err.status = 404;
+    next(err);
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+    // Log error details for debugging
+    console.error('Error occurred:', err.message);
+    console.error('Stack trace:', err.stack);
+    
+    // Determine status and template
+    const status = err.status || 500;
+    const template = status === 404 ? '404' : '500';
+    
+    // Prepare data for the template
+    const context = {
+        title: status === 404 ? 'Page Not Found' : 'Server Error',
+        error: err.message,
+        stack: err.stack
+    };
+    
+    // Render the appropriate error template
+    res.status(status).render(`errors/${template}`, context);
+});
 
 app.listen(PORT, async () => {
   try {
@@ -66,5 +82,3 @@ app.listen(PORT, async () => {
     console.error('Error connecting to the database:', error);
   }
 });
-
-
