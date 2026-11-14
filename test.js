@@ -1,5 +1,57 @@
-console.log('Nodemon test started');
+// console.log('Nodemon test started');
 
-setInterval(() => {
-    console.log('Nodemon is still running...');
-}, 3000);
+// setInterval(() => {
+//     console.log('Nodemon is still running...');
+// }, 3000);
+
+// Global request logging
+
+import express from 'express';
+const app = express();
+
+// Define reusable middleware functions
+const logAccess = (req, res, next) => {
+    console.log(`Access attempt to ${req.url}`);
+    next();
+};
+
+const requireAdmin = (req, res, next) => {
+    // In a real app, you'd check actual authentication
+    if (req.headers.role !== 'admin') {
+        return res.status(403).send('Admin access required');
+    }
+    next();
+};
+
+const requireAuth = (req, res, next) => {
+    if (!req.headers.authorization) {
+        return res.status(401).send('Authentication required');
+    }
+    next();
+};
+
+// Public route - no middleware needed
+app.get('/', (req, res) => {
+    res.send('Welcome to our site!');
+});
+
+// Protected route - requires authentication
+app.get('/profile', requireAuth, (req, res) => {
+    res.send('Your profile information');
+});
+
+// Admin route - requires both logging and admin check
+app.get('/admin', logAccess, requireAdmin, (req, res) => {
+    res.send('Admin dashboard');
+});
+
+// Multiple middleware functions in sequence
+app.get('/secure-admin', logAccess, requireAuth, requireAdmin, (req, res) => {
+    res.send('Super secure admin area');
+});
+
+
+const PORT = 3001;
+app.listen(PORT, () => {
+    console.log(`Test server running at http://localhost:${PORT}`);
+});
