@@ -7,6 +7,7 @@ import { showCategoriesPage, showCategoryDetailsPage } from './controllers/categ
 import { testErrorPage } from './controllers/errors.js';
 import { showNewOrganizationForm } from './controllers/organizations.js';
 import { processNewOrganizationForm } from './controllers/organizations.js';
+import { organizationValidation } from './controllers/organizations.js';
 
 const router = express.Router();
 
@@ -20,7 +21,9 @@ router.get('/categories', showCategoriesPage);
 router.get('/category/:id', showCategoryDetailsPage);
 
 // Route to handle new organization form submission
-router.post('/new-organization', processNewOrganizationForm);
+router.post('/new-organization', organizationValidation, processNewOrganizationForm);
+
+
 
 // error-handling routes
 router.get('/test-error', testErrorPage);
