@@ -1,6 +1,6 @@
 import { getUpcomingProjects, getProjectDetails } from '../models/projects.js';
 import { getCategoriesByProjectId } from '../models/categories.js';
-import { createProject } from '../models/projects.js';
+import { createProject, updateProject } from '../models/projects.js';
 import { getAllOrganizations } from '../models/organizations.js';
 import { body, validationResult } from 'express-validator';
 
@@ -79,4 +79,57 @@ const processNewProjectForm = async (req, res) => {
     }
 };
 
-export { showProjectsPage, showProjectDetailsPage, showNewProjectForm, processNewProjectForm, projectValidation };
+const showEditProjectForm = async (req, res) => {
+    const projectId = req.params.id;
+
+    // Get the existing project data so the form can be pre-filled
+    const projectDetails = await getProjectDetails(projectId);
+
+    if (!projectDetails) {
+        return res.status(404).send('Service project not found');
+    }
+
+    // Get all organizations for the organization dropdown
+    const organizations = await getAllOrganizations();
+
+    const title = 'Edit Service Project';
+
+    res.render('edit-project', { title, projectDetails, organizations });
+};
+
+const processEditProjectForm = async (req, res) => {
+    const projectId = req.params.id;
+
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        // Loop through validation errors and flash them
+        errors.array().forEach((error) => {
+            req.flash('error', error.msg);
+        });
+
+        // Redirect back to the edit project form
+        return res.redirect(`/edit-project/${projectId}`);
+    }
+
+    const { title, description, location, date, organizationId } = req.body;
+
+    try {
+        await updateProject(projectId, title, description, location, date, organizationId);
+        req.flash('success', 'Service project updated successfully!');
+        res.redirect(`/project/${projectId}`);
+    } catch (error) {
+        console.error('Error updating service project:', error);
+        res.status(500).send('An error occurred while updating the service project.');
+    }
+};
+
+export {
+    showProjectsPage,
+    showProjectDetailsPage,
+    showNewProjectForm,
+    processNewProjectForm,
+    projectValidation,
+    showEditProjectForm,
+    processEditProjectForm
+};
