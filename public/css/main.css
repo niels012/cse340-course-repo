@@ -244,32 +244,119 @@ main > ul > li a:hover {
     text-decoration: underline;
 }
 
-/* Flash message styles */
+/* ========================================
+   Flash messages (below the nav, aligned with the page content)
+   ======================================== */
+.flash-messages {
+    width: 100%;
+    max-width: 1200px;
+    margin: 1.5rem auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Pull the page content a little closer when a message is showing */
+.flash-messages + main {
+    margin-top: 1rem;
+}
+
 .alert {
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-    border-radius: 4px;
+    --alert-accent: #1d6fa5;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding: 1rem 1.25rem;
+    color: #2c3e50;
+    background-color: #ffffff;
+    border: 1px solid #e3e6ea;
+    border-left: 5px solid var(--alert-accent);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    animation: alert-in 0.3s ease-out;
 }
-.alert.success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
+
+/* Colors: each accent has at least 4.5:1 contrast against white */
+.alert.success { --alert-accent: #2e7d32; }
+.alert.error   { --alert-accent: #a41e34; }
+.alert.warning { --alert-accent: #a15c07; }
+.alert.info    { --alert-accent: #1d6fa5; }
+
+.alert-icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-top: 0.05rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    background-color: var(--alert-accent);
+    border-radius: 50%;
 }
-.alert.error {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
+
+.alert-content {
+    flex: 1;
+    min-width: 0;
 }
-.alert.warning {
-    color: #856404;
-    background-color: #fff3cd;
-    border-color: #ffeeba;
+
+.alert .alert-heading {
+    margin: 0 0 0.15rem;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--alert-accent);
 }
-.alert.info {
-    color: #0c5460;
-    background-color: #d1ecf1;
-    border-color: #bee5eb;
+
+.alert .alert-text {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.alert-list {
+    margin: 0.25rem 0 0;
+    padding-left: 1.1rem;
+    line-height: 1.5;
+}
+
+.alert-list li + li {
+    margin-top: 0.2rem;
+}
+
+.alert-close {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    margin: -0.25rem -0.5rem 0 0;
+    font: inherit;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: #6c757d;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.alert-close:hover {
+    color: #1a1a1a;
+    background-color: #f1f3f5;
+}
+
+.alert-close:focus-visible {
+    outline: 3px solid #ffd700;
+    outline-offset: 1px;
+}
+
+@keyframes alert-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .alert { animation: none; }
 }
 
 /* Organization cards: the name link stretches to cover the whole card */
@@ -731,11 +818,17 @@ body > footer a:hover {
    ======================================== */
 main form {
     max-width: 40rem;
-    margin-bottom: 1.5rem;
+    margin: 0 auto 1.5rem; /* center the form horizontally */
     padding: 1.5rem;
     background-color: #ffffff;
     border: 1px solid #dee2e6;
     border-radius: 8px;
+}
+
+/* Keep the back link under a form aligned with the centered form */
+main form + p {
+    max-width: 40rem;
+    margin-inline: auto;
 }
 
 .form-group {
@@ -817,4 +910,81 @@ main form button[type="submit"] {
 main form button[type="submit"]:hover,
 main form button[type="submit"]:focus-visible {
     background-color: #7c2c2c;
+}
+
+/* ========================================
+   Action buttons (Add New / Edit links)
+   ======================================== */
+.page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 1.75rem 0 1rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    font-weight: 600;
+    line-height: 1.2;
+    border: 2px solid #a41e34;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Primary: solid maroon (Add New ...) - white on #a41e34 is 7.3:1 contrast */
+.btn-primary {
+    color: #ffffff;
+    background-color: #a41e34;
+    box-shadow: 0 2px 6px rgba(164, 30, 52, 0.25);
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+    color: #ffffff;
+    background-color: #7c2c2c;
+    border-color: #7c2c2c;
+    box-shadow: 0 4px 12px rgba(124, 44, 44, 0.3);
+}
+
+/* Secondary: outlined maroon (Edit ...) that fills on hover */
+.btn-outline {
+    color: #a41e34;
+    background-color: #ffffff;
+}
+
+.btn-outline:hover,
+.btn-outline:focus-visible {
+    color: #ffffff;
+    background-color: #a41e34;
+}
+
+.btn:hover,
+.btn:focus {
+    text-decoration: none;
+}
+
+/* Gold focus ring, matching the navigation */
+.btn:focus-visible {
+    outline: 3px solid #ffd700;
+    outline-offset: 2px;
+}
+
+.btn-icon {
+    font-size: 1.2em;
+    line-height: 1;
+}
+
+/* Smaller variant for inline actions such as "Edit Categories" */
+.btn-sm {
+    margin-top: 0.75rem;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.9rem;
+}
+
+/* Only show the focus ring for keyboard users, not after a mouse click */
+.btn:focus:not(:focus-visible) {
+    outline: none;
 }

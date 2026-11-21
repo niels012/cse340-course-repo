@@ -7,6 +7,8 @@
             <li><a href="/category/<%= category.category_id %>"><%= category.name %></a></li>
             <% }) %>
         </ul>
-        <p><a href="/new-category">Add a new category</a></p>
+        <div class="page-actions">
+            <a class="btn btn-primary" href="/new-category"><span class="btn-icon" aria-hidden="true">+</span> Add a New Category</a>
+        </div>
     </main>
     <%- include('partials/footer') %>

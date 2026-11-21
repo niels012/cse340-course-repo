@@ -23,14 +23,39 @@
                 <% }); %>
             </ul>
         </div>
-        <% const messages = flash(); %>
-        <% Object.keys(messages).forEach(type => { %>
-            <% if (messages[type].length > 0) { %>
-                <div class="alert <%= type %>">
-                    <% messages[type].forEach(msg => { %>
-                        <p><%= msg %></p>
-                    <% }); %>
-                </div>
-            <% } %>
-        <% }); %>
     </nav>
+
+    <%
+        // Flash messages: shown below the navigation, above the page content
+        const messages = flash();
+        const alertStyles = {
+            success: { icon: '✓', heading: 'Success' },
+            error:   { icon: '!', heading: 'Please fix the following' },
+            warning: { icon: '⚠', heading: 'Warning' },
+            info:    { icon: 'i', heading: 'Note' }
+        };
+        const activeTypes = Object.keys(messages).filter(type => messages[type].length > 0);
+    %>
+    <% if (activeTypes.length > 0) { %>
+        <div class="flash-messages">
+            <% activeTypes.forEach(type => { %>
+                <% const style = alertStyles[type] || alertStyles.info; %>
+                <div class="alert <%= type %>" role="<%= type === 'error' ? 'alert' : 'status' %>">
+                    <span class="alert-icon" aria-hidden="true"><%= style.icon %></span>
+                    <div class="alert-content">
+                        <p class="alert-heading"><%= style.heading %></p>
+                        <% if (messages[type].length === 1) { %>
+                            <p class="alert-text"><%= messages[type][0] %></p>
+                        <% } else { %>
+                            <ul class="alert-list">
+                                <% messages[type].forEach(msg => { %>
+                                    <li><%= msg %></li>
+                                <% }); %>
+                            </ul>
+                        <% } %>
+                    </div>
+                    <button type="button" class="alert-close" aria-label="Dismiss message" onclick="this.parentElement.remove()">&times;</button>
+                </div>
+            <% }); %>
+        </div>
+    <% } %>
