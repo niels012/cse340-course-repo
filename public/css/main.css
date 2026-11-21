@@ -726,3 +726,95 @@ body > footer a:hover {
         content: " (" attr(href) ")";
     }
 }
+/* ========================================
+   Forms (new/edit organization, project, category)
+   ======================================== */
+main form {
+    max-width: 40rem;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="date"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    font: inherit;
+    color: #2c3e50;
+    background-color: #ffffff;
+    border: 1px solid #6c757d; /* 4.7:1 against white, meets WCAG non-text contrast */
+    border-radius: 6px;
+}
+
+.form-group textarea {
+    min-height: 8rem;
+    resize: vertical;
+}
+
+/* Checkbox list (assign categories form) */
+.form-group > div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-group input[type="checkbox"] {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: #a41e34;
+}
+
+.form-group > div label {
+    font-weight: 400;
+}
+
+/* Visible keyboard focus for every form control */
+main form input:focus-visible,
+main form textarea:focus-visible,
+main form select:focus-visible,
+main form button:focus-visible {
+    outline: 3px solid #a41e34;
+    outline-offset: 2px;
+}
+
+/* Highlight fields the browser has flagged as invalid after the user has typed */
+.form-group input:user-invalid,
+.form-group textarea:user-invalid,
+.form-group select:user-invalid {
+    border-color: #a41e34;
+}
+
+main form button[type="submit"] {
+    padding: 0.7rem 1.5rem;
+    font: inherit;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #a41e34;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+main form button[type="submit"]:hover,
+main form button[type="submit"]:focus-visible {
+    background-color: #7c2c2c;
+}

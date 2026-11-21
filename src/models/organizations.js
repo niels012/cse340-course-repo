@@ -31,7 +31,7 @@ const getOrganizationById = async(organizationId) => {
  * @param {string} description - A description of the organization.
  * @param {string} contactEmail - The contact email for the organization.
  * @param {string} logoFilename - The filename of the organization's logo.
- * @returns {string} The id of the newly created organization record.
+ * @returns {Promise<number>} The id of the newly created organization record.
  */
 const createOrganization = async (name, description, contactEmail, logoFilename) => {
     const query = `
@@ -54,7 +54,38 @@ const createOrganization = async (name, description, contactEmail, logoFilename)
     return result.rows[0].organization_id;
 };
 
+/**
+ * Updates an existing organization in the database.
+ * @param {number} organizationId - The ID of the organization to update.
+ * @param {string} name - The new name of the organization.
+ * @param {string} description - The new description of the organization.
+ * @param {string} contactEmail - The new contact email for the organization.
+ * @param {string} logoFilename - The filename of the organization's logo.
+ * @returns {Promise<number>} The ID of the updated organization.
+ */
+const updateOrganization = async (organizationId, name, description, contactEmail, logoFilename) => {
+    const query = `
+        UPDATE public.organizations
+        SET name = $1,
+            description = $2,
+            email = $3,
+            logo_filename = $4
+        WHERE organization_id = $5
+        RETURNING organization_id;
+    `;
 
+    const queryParams = [name, description, contactEmail, logoFilename, organizationId];
+    const result = await db.query(query, queryParams);
 
-    
-export {getAllOrganizations, getOrganizationById, createOrganization}
+    if (result.rows.length === 0) {
+        throw new Error('Organization not found');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('Updated organization with ID:', organizationId);
+    }
+
+    return result.rows[0].organization_id;
+};
+
+export { getAllOrganizations, getOrganizationById, createOrganization, updateOrganization }

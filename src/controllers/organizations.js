@@ -1,4 +1,4 @@
-import { getAllOrganizations, getOrganizationById, createOrganization} from '../models/organizations.js';
+import { getAllOrganizations, getOrganizationById, createOrganization, updateOrganization } from '../models/organizations.js';
 import { body, validationResult } from 'express-validator';
 
 // Define validation and sanitization rules for organization form
@@ -71,12 +71,58 @@ const processNewOrganizationForm = async (req, res) => {
     res.redirect(`/organization/${organizationId}`);
 };
 
+const showEditOrganizationForm = async (req, res) => {
+    const organizationId = req.params.id;
+
+    // Get the existing organization data so the form can be pre-filled
+    const organizationDetails = await getOrganizationById(organizationId);
+
+    if (!organizationDetails) {
+        return res.status(404).send('Organization not found');
+    }
+
+    const title = 'Edit Organization';
+
+    res.render('edit-organization', { title, organizationDetails });
+};
+
+const processEditOrganizationForm = async (req, res) => {
+    const organizationId = req.params.id;
+
+    // Check for validation errors
+    const results = validationResult(req);
+    if (!results.isEmpty()) {
+        // Validation failed - loop through errors
+        results.array().forEach((error) => {
+            req.flash('error', error.msg);
+        });
+
+        // Redirect back to the edit organization form
+        return res.redirect(`/edit-organization/${organizationId}`);
+    }
+
+    const { name, description, contactEmail } = req.body;
+
+    // The form does not change the logo, so keep the organization's current logo
+    const organizationDetails = await getOrganizationById(organizationId);
+
+    if (!organizationDetails) {
+        return res.status(404).send('Organization not found');
+    }
+
+    await updateOrganization(organizationId, name, description, contactEmail, organizationDetails.logo_filename);
+    req.flash('success', 'Organization updated successfully!');
+    res.redirect(`/organization/${organizationId}`);
+};
+
 export {
-    showOrganizationsPage, 
-    organizationDetailsPage, 
-    showNewOrganizationForm, 
-    processNewOrganizationForm, 
-    organizationValidation 
+    showOrganizationsPage,
+    organizationDetailsPage,
+    showNewOrganizationForm,
+    processNewOrganizationForm,
+    organizationValidation,
+    showEditOrganizationForm,
+    processEditOrganizationForm
 };
 
 
