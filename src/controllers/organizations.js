@@ -1,4 +1,11 @@
-import { getAllOrganizations, getOrganizationById, createOrganization, updateOrganization } from '../models/organizations.js';
+import {
+    getAllOrganizations,
+    getOrganizationById,
+    createOrganization,
+    updateOrganization,
+    updateOrganizationLogo,
+    getOrganizationLogo
+} from '../models/organizations.js';
 import { body, validationResult } from 'express-validator';
 
 // Define validation and sanitization rules for organization form
@@ -103,7 +110,7 @@ const processEditOrganizationForm = async (req, res) => {
 
     const { name, description, contactEmail } = req.body;
 
-    // The form does not change the logo, so keep the organization's current logo
+    // Keep the organization's fallback logo filename (e.g. placeholder-logo.png)
     const organizationDetails = await getOrganizationById(organizationId);
 
     if (!organizationDetails) {
@@ -111,8 +118,33 @@ const processEditOrganizationForm = async (req, res) => {
     }
 
     await updateOrganization(organizationId, name, description, contactEmail, organizationDetails.logo_filename);
+
+    // If a new logo was chosen, save it (the uploadLogo middleware already checked it is a valid image)
+    if (req.file) {
+        await updateOrganizationLogo(organizationId, req.file.buffer, req.file.mimetype);
+    }
+
     req.flash('success', 'Organization updated successfully!');
     res.redirect(`/organization/${organizationId}`);
+};
+
+// Sends an organization's uploaded logo image to the browser
+const showOrganizationLogo = async (req, res) => {
+    const id = Number(req.params.id);
+    const logo = Number.isInteger(id) ? await getOrganizationLogo(id) : null;
+
+    if (!logo) {
+        return res.status(404).send('Logo not found');
+    }
+
+    res.set({
+        'Content-Type': logo.logo_mime,
+        // The URL changes (?v=...) whenever a new logo is uploaded, so browsers can cache it long-term
+        'Cache-Control': 'public, max-age=31536000, immutable',
+        // Tell browsers not to guess a different file type
+        'X-Content-Type-Options': 'nosniff'
+    });
+    res.send(logo.logo_data);
 };
 
 export {
@@ -122,7 +154,8 @@ export {
     processNewOrganizationForm,
     organizationValidation,
     showEditOrganizationForm,
-    processEditOrganizationForm
+    processEditOrganizationForm,
+    showOrganizationLogo
 };
 
 

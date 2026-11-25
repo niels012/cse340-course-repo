@@ -988,3 +988,70 @@ main form button[type="submit"]:focus-visible {
 .btn:focus:not(:focus-visible) {
     outline: none;
 }
+
+/* ========================================
+   Logo upload field (edit organization form)
+   ======================================== */
+.logo-field {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.logo-preview {
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
+    padding: 0.5rem;
+    object-fit: contain;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.logo-field-input {
+    flex: 1;
+    min-width: 14rem;
+}
+
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 0.5rem;
+    font: inherit;
+    color: #2c3e50;
+    background-color: #f8f9fa;
+    border: 1px dashed #6c757d;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.form-group input[type="file"]::file-selector-button {
+    margin-right: 0.75rem;
+    padding: 0.4rem 0.9rem;
+    font: inherit;
+    font-weight: 600;
+    color: #a41e34;
+    background-color: #ffffff;
+    border: 2px solid #a41e34;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.form-group input[type="file"]::file-selector-button:hover {
+    color: #ffffff;
+    background-color: #a41e34;
+}
+
+.form-group input[type="file"]:focus-visible {
+    outline: 3px solid #a41e34;
+    outline-offset: 2px;
+}
+
+.field-help {
+    margin: 0.4rem 0 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #5a6268; /* 6.4:1 on white */
+}

@@ -3,7 +3,11 @@ CREATE table organizations (
 	name varchar(150) NOT NULL,
 	description TEXT NOT NULL,
 	email varchar(255) NOT NULL,
-	logo_filename varchar(255) NOT NULL
+	logo_filename varchar(255) NOT NULL,
+	-- Uploaded logo (stored in the database so it survives server restarts)
+	logo_data BYTEA,
+	logo_mime varchar(50),
+	logo_updated_at TIMESTAMPTZ
 );
 
 -- ========================================

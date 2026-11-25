@@ -18,7 +18,8 @@ import { testErrorPage } from './controllers/errors.js';
 import { showNewOrganizationForm } from './controllers/organizations.js';
 import { processNewOrganizationForm } from './controllers/organizations.js';
 import { organizationValidation } from './controllers/organizations.js';
-import { showEditOrganizationForm, processEditOrganizationForm } from './controllers/organizations.js';
+import { showEditOrganizationForm, processEditOrganizationForm, showOrganizationLogo } from './controllers/organizations.js';
+import { uploadLogo } from './middleware/upload.js';
 import { processNewProjectForm } from './controllers/projects.js';
 import { showNewProjectForm } from './controllers/projects.js';
 import { projectValidation } from './controllers/projects.js';
@@ -30,6 +31,7 @@ router.get('/', showHomePage);
 router.get('/organizations', showOrganizationsPage);
 router.get('/new-organization', showNewOrganizationForm);
 router.get('/organization/:id', organizationDetailsPage);
+router.get('/organization/:id/logo', showOrganizationLogo);
 router.get('/projects', showProjectsPage);
 router.get('/project/:id', showProjectDetailsPage);
 router.get('/categories', showCategoriesPage);
@@ -40,7 +42,8 @@ router.post('/new-organization', organizationValidation, processNewOrganizationF
 
 // Routes to display and process the edit organization form
 router.get('/edit-organization/:id', showEditOrganizationForm);
-router.post('/edit-organization/:id', organizationValidation, processEditOrganizationForm);
+// uploadLogo runs first: it reads the multipart form (logo file + text fields) so the validation can see req.body
+router.post('/edit-organization/:id', uploadLogo, organizationValidation, processEditOrganizationForm);
 
 // Route for new project page
 router.get('/new-project', showNewProjectForm);
