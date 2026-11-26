@@ -51,8 +51,14 @@ app.use((req, res, next) => {
     next(); // Pass control to the next middleware or route
 });
 
-// Middleware to make NODE_ENV available to all templates
+// Middleware to make NODE_ENV and the login status available to all templates
 app.use((req, res, next) => {
+    // true when a user is logged in (processLoginForm stores the user in the session)
+    res.locals.isLoggedIn = false;
+    if (req.session && req.session.user) {
+        res.locals.isLoggedIn = true;
+    }
+
     res.locals.NODE_ENV = NODE_ENV;
     res.locals.currentPath = req.path; // Make the current path available to templates
     next();

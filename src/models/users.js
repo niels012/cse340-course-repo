@@ -1,4 +1,5 @@
 import db from './db.js'
+import bcrypt from 'bcrypt';
 
 /**
  * Creates a new user in the database with the default 'user' role.
@@ -29,4 +30,60 @@ const createUser = async (name, email, passwordHash) => {
     return result.rows[0].user_id;
 };
 
-export { createUser };
+/**
+ * Finds a user by email address.
+ * @param {string} email - The email address (username) to look up.
+ * @returns {Promise<object|null>} The user row (including password_hash), or null if not found.
+ */
+const findUserByEmail = async (email) => {
+    const query = `
+        SELECT user_id, name, email, password_hash, role_id
+        FROM public.users
+        WHERE email = $1
+    `;
+    const queryParams = [email];
+
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        return null; // User not found
+    }
+
+    return result.rows[0];
+};
+
+/**
+ * Checks a plain-text password against a stored bcrypt hash.
+ * @param {string} password - The password the user typed.
+ * @param {string} passwordHash - The hash stored in the database.
+ * @returns {Promise<boolean>} True if they match, false if not.
+ */
+const verifyPassword = async (password, passwordHash) => {
+    return bcrypt.compare(password, passwordHash);
+};
+
+/**
+ * Checks a user's email and password.
+ * @param {string} email - The email address (username).
+ * @param {string} password - The plain-text password the user typed.
+ * @returns {Promise<object|null>} The user (without password_hash) if the login is valid, otherwise null.
+ */
+const authenticateUser = async (email, password) => {
+    const user = await findUserByEmail(email);
+
+    if (!user) {
+        return null; // No user with that email
+    }
+
+    const isPasswordCorrect = await verifyPassword(password, user.password_hash);
+
+    if (!isPasswordCorrect) {
+        return null; // Wrong password
+    }
+
+    // Never send the password hash back to the rest of the app
+    delete user.password_hash;
+    return user;
+};
+
+export { createUser, authenticateUser };
