@@ -54,7 +54,8 @@ const processLoginForm = async (req, res) => {
                 console.log('User logged in:', user);
             }
 
-            res.redirect('/');
+            // Send the user to their dashboard after a successful login
+            res.redirect('/dashboard');
         } else {
             req.flash('error', 'Invalid email or password.');
             res.redirect('/login');
@@ -78,10 +79,37 @@ const processLogout = async (req, res) => {
     res.redirect('/login');
 };
 
+/**
+ * Middleware that protects routes only logged-in users may see.
+ * processLoginForm stores the user in req.session.user, so if it is missing
+ * the visitor is sent to the login page with a flash message.
+ */
+const requireLogin = (req, res, next) => {
+    if (!req.session || !req.session.user) {
+        req.flash('error', 'You must be logged in to view that page.');
+        return res.redirect('/login');
+    }
+
+    next();
+};
+
+const showDashboard = (req, res) => {
+    // requireLogin (on the route) guarantees req.session.user exists here
+    const user = req.session.user;
+
+    res.render('dashboard', {
+        title: 'Dashboard',
+        name: user.name,
+        email: user.email
+    });
+};
+
 export {
     showUserRegistrationForm,
     processUserRegistrationForm,
     showLoginForm,
     processLoginForm,
-    processLogout
+    processLogout,
+    requireLogin,
+    showDashboard
 };
