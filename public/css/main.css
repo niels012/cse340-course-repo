@@ -1056,3 +1056,64 @@ main form button[type="submit"]:focus-visible {
     line-height: 1.5;
     color: #5a6268; /* 6.4:1 on white */
 }
+
+/* ========================================
+   Flash message auto-dismiss (success / info / warning)
+   The countdown bar's animation is the timer: when it ends, the message fades out.
+   ======================================== */
+.alert[data-autodismiss] {
+    position: relative;
+    overflow: hidden;
+}
+
+.alert-progress {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--alert-accent);
+    opacity: 0.55;
+    transform-origin: left center;
+    animation: alert-countdown var(--alert-timeout, 5s) linear forwards;
+}
+
+/* Pause the countdown while the user is hovering or using the keyboard on the message */
+.alert:hover .alert-progress,
+.alert:focus-within .alert-progress {
+    animation-play-state: paused;
+}
+
+.alert.alert-hiding {
+    animation: alert-out 0.3s ease-in forwards;
+    pointer-events: none;
+}
+
+@keyframes alert-countdown {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+}
+
+@keyframes alert-out {
+    to { opacity: 0; transform: translateY(-6px); }
+}
+
+/* Reduced motion: keep the timer, but no shrinking bar and no sliding */
+@keyframes alert-countdown-still {
+    from { opacity: 0.55; }
+    to   { opacity: 0.55; }
+}
+
+@keyframes alert-fade {
+    to { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .alert-progress {
+        animation-name: alert-countdown-still;
+    }
+
+    .alert.alert-hiding {
+        animation: alert-fade 0.2s linear forwards;
+    }
+}

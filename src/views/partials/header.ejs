@@ -42,11 +42,13 @@
     <%
         // Flash messages: shown below the navigation, above the page content
         const messages = flash();
+        // autoDismiss = seconds before the message fades out on its own.
+        // Errors stay (0) until the user closes them, so there is time to read and fix the problem.
         const alertStyles = {
-            success: { icon: '✓', heading: 'Success' },
-            error:   { icon: '!', heading: 'Please fix the following' },
-            warning: { icon: '⚠', heading: 'Warning' },
-            info:    { icon: 'i', heading: 'Note' }
+            success: { icon: '✓', heading: 'Success', autoDismiss: 5 },
+            error:   { icon: '!', heading: 'Please fix the following', autoDismiss: 0 },
+            warning: { icon: '⚠', heading: 'Warning', autoDismiss: 5 },
+            info:    { icon: 'i', heading: 'Note', autoDismiss: 5 }
         };
         const activeTypes = Object.keys(messages).filter(type => messages[type].length > 0);
     %>
@@ -54,7 +56,7 @@
         <div class="flash-messages">
             <% activeTypes.forEach(type => { %>
                 <% const style = alertStyles[type] || alertStyles.info; %>
-                <div class="alert <%= type %>" role="<%= type === 'error' ? 'alert' : 'status' %>">
+                <div class="alert <%= type %>" role="<%= type === 'error' ? 'alert' : 'status' %>"<% if (style.autoDismiss > 0) { %> style="--alert-timeout: <%= style.autoDismiss %>s" data-autodismiss<% } %>>
                     <span class="alert-icon" aria-hidden="true"><%= style.icon %></span>
                     <div class="alert-content">
                         <p class="alert-heading"><%= style.heading %></p>
@@ -68,8 +70,45 @@
                             </ul>
                         <% } %>
                     </div>
-                    <button type="button" class="alert-close" aria-label="Dismiss message" onclick="this.parentElement.remove()">&times;</button>
+                    <button type="button" class="alert-close" aria-label="Dismiss message">&times;</button>
+                    <% if (style.autoDismiss > 0) { %>
+                        <%# Countdown bar: when its animation ends, the message is dismissed %>
+                        <span class="alert-progress" aria-hidden="true"></span>
+                    <% } %>
                 </div>
             <% }); %>
         </div>
+
+        <script>
+            // Flash messages: close button + auto-dismiss.
+            // The countdown bar's CSS animation is the timer, so hovering the message
+            // (or focusing its close button) pauses it, and leaving resumes it.
+            (() => {
+                const dismiss = (alert) => {
+                    if (alert.classList.contains('alert-hiding')) return;
+                    alert.classList.add('alert-hiding');
+
+                    const remove = () => {
+                        const container = alert.parentElement;
+                        alert.remove();
+                        // Remove the empty container so its spacing disappears too
+                        if (container && container.children.length === 0) container.remove();
+                    };
+                    alert.addEventListener('animationend', (event) => {
+                        if (event.animationName === 'alert-out') remove();
+                    });
+                    // Fallback in case animations are turned off
+                    setTimeout(remove, 400);
+                };
+
+                document.querySelectorAll('.flash-messages .alert').forEach((alert) => {
+                    alert.querySelector('.alert-close').addEventListener('click', () => dismiss(alert));
+
+                    const progress = alert.querySelector('.alert-progress');
+                    if (progress) {
+                        progress.addEventListener('animationend', () => dismiss(alert));
+                    }
+                });
+            })();
+        </script>
     <% } %>
