@@ -25,9 +25,11 @@
         </div>
     </article>
 
-    <div class="page-actions">
-        <a class="btn btn-outline" href="/edit-organization/<%= organization.organization_id %>">Edit Organization</a>
-    </div>
+    <% if (user && user.role_name === 'admin') { %>
+        <div class="page-actions">
+            <a class="btn btn-outline" href="/edit-organization/<%= organization.organization_id %>">Edit Organization</a>
+        </div>
+    <% } %>
     <p><a class="back-link" href="/organizations">&larr; Back to organizations</a></p>
 </main>
 

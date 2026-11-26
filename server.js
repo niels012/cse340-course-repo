@@ -59,6 +59,10 @@ app.use((req, res, next) => {
         res.locals.isLoggedIn = true;
     }
 
+    // The logged-in user's session data (including role_name), or null for visitors.
+    // Templates use it to show admin-only links: <% if (user && user.role_name === 'admin') { %>
+    res.locals.user = req.session.user || null;
+
     res.locals.NODE_ENV = NODE_ENV;
     res.locals.currentPath = req.path; // Make the current path available to templates
     next();

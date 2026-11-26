@@ -31,15 +31,18 @@ const createUser = async (name, email, passwordHash) => {
 };
 
 /**
- * Finds a user by email address.
+ * Finds a user by email address, including the name of their role.
  * @param {string} email - The email address (username) to look up.
- * @returns {Promise<object|null>} The user row (including password_hash), or null if not found.
+ * @returns {Promise<object|null>} The user row (including password_hash and role_name), or null if not found.
  */
 const findUserByEmail = async (email) => {
+    // Join the roles table so the user object carries role_name (e.g. 'user' or 'admin')
+    // u.name is kept because the dashboard displays the user's name from the session
     const query = `
-        SELECT user_id, name, email, password_hash, role_id
-        FROM public.users
-        WHERE email = $1
+        SELECT u.user_id, u.name, u.email, u.password_hash, r.role_name
+        FROM public.users u
+        JOIN public.roles r ON u.role_id = r.role_id
+        WHERE u.email = $1
     `;
     const queryParams = [email];
 

@@ -19,9 +19,11 @@
             </li>
         <% }); %>
     </ul>
-    <div class="page-actions">
-        <a class="btn btn-primary" href="/new-project"><span class="btn-icon" aria-hidden="true">+</span> Add a New Service Project</a>
-    </div>
+    <% if (user && user.role_name === 'admin') { %>
+        <div class="page-actions">
+            <a class="btn btn-primary" href="/new-project"><span class="btn-icon" aria-hidden="true">+</span> Add a New Service Project</a>
+        </div>
+    <% } %>
 </main>
 
 <%- include('partials/footer') %>
