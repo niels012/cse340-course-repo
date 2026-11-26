@@ -148,3 +148,34 @@ VALUES
     (13, 4), (13, 5),   -- Homeless Shelter Meal Service
     (14, 3),            -- Literacy Tutoring Night
     (15, 2), (15, 5);   -- Neighborhood Cleanup Day
+
+-- ========================================
+-- Table: Roles (user roles for authorization)
+-- ========================================
+CREATE TABLE roles (
+    role_id SERIAL PRIMARY KEY,
+    role_name VARCHAR(50) UNIQUE NOT NULL,
+    role_description TEXT
+);
+
+-- ========================================
+-- Insert initial data: Roles
+-- ========================================
+INSERT INTO roles (role_name, role_description) VALUES
+    ('user', 'Standard user with basic access'),
+    ('admin', 'Administrator with full system access');
+
+-- Verify the data was inserted
+SELECT * FROM roles;
+
+-- ========================================
+-- Table: Users (each user has one role from the roles table)
+-- ========================================
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role_id INTEGER REFERENCES roles(role_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
