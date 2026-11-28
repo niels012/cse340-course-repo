@@ -1,0 +1,44 @@
+<%- include('partials/header') %>
+
+<main>
+    <h1><%= title %></h1>
+
+    <% if (users.length === 0) { %>
+        <p>No users have registered yet.</p>
+    <% } else { %>
+        <p class="table-summary"><%= users.length %> registered <%= users.length === 1 ? 'user' : 'users' %></p>
+
+        <%# The wrapper lets the table scroll sideways on small screens instead of breaking the layout %>
+        <div class="table-wrapper" tabindex="0" role="region" aria-label="Registered users">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email (Username)</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Joined</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(account => { %>
+                        <% const joined = new Date(account.created_at); %>
+                        <tr>
+                            <td><%= account.name %></td>
+                            <td><%= account.email %></td>
+                            <td>
+                                <span class="role-badge role-<%= account.role_name || 'none' %>"><%= account.role_name || 'none' %></span>
+                            </td>
+                            <td>
+                                <time datetime="<%= joined.toISOString() %>"><%= joined.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %></time>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    <% } %>
+
+    <p><a class="back-link" href="/dashboard">&larr; Back to dashboard</a></p>
+</main>
+
+<%- include('partials/footer') %>

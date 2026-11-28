@@ -1117,3 +1117,94 @@ main form button[type="submit"]:focus-visible {
         animation: alert-fade 0.2s linear forwards;
     }
 }
+
+/* ========================================
+   Data tables (registered users page)
+   ======================================== */
+.table-summary {
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    color: #5a6268;
+}
+
+.table-wrapper {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    overflow-x: auto; /* scroll sideways on small screens */
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.table-wrapper:focus-visible {
+    outline: 3px solid #a41e34;
+    outline-offset: 2px;
+}
+
+.data-table {
+    width: 100%;
+    min-width: 36rem;
+    border-collapse: collapse;
+    background-color: #ffffff;
+}
+
+.data-table th,
+.data-table td {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.data-table thead th {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background-color: #7c2c2c;
+}
+
+.data-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.data-table tbody tr:hover {
+    background-color: #fdf2f4;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table td:nth-child(2) {
+    overflow-wrap: anywhere;
+}
+
+/* Role labels */
+.role-badge {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: capitalize;
+    border-radius: 999px;
+    border: 1px solid transparent;
+}
+
+.role-badge.role-admin {
+    color: #ffffff;
+    background-color: #a41e34; /* 7.3:1 */
+}
+
+.role-badge.role-user {
+    color: #1f5f2a;           /* 7.1:1 on its background */
+    background-color: #e6f4ea;
+    border-color: #b7dfc1;
+}
+
+.role-badge.role-none {
+    color: #495057;
+    background-color: #f1f3f5;
+    border-color: #dee2e6;
+}

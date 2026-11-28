@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { createUser, authenticateUser } from '../models/users.js';
+import { createUser, authenticateUser, getAllUsers } from '../models/users.js';
 
 // PostgreSQL error code for a UNIQUE constraint violation (email must be unique)
 const UNIQUE_VIOLATION = '23505';
@@ -108,10 +108,11 @@ const requireRole = (role) => {
             return res.redirect('/login');
         }
 
-        // Check if user's role matches the required role
+        // Check if user's role matches the required role.
+        // Logged-in users without the role go back to their dashboard (which every logged-in user can see)
         if (req.session.user.role_name !== role) {
             req.flash('error', 'You do not have permission to access this page.');
-            return res.redirect('/');
+            return res.redirect('/dashboard');
         }
 
         // User has required role, continue
@@ -130,6 +131,16 @@ const showDashboard = (req, res) => {
     });
 };
 
+// Admin-only page listing every registered user (protected by requireRole('admin') on the route)
+const showUsersPage = async (req, res) => {
+    const users = await getAllUsers();
+
+    res.render('users', {
+        title: 'Registered Users',
+        users
+    });
+};
+
 export {
     showUserRegistrationForm,
     processUserRegistrationForm,
@@ -138,5 +149,6 @@ export {
     processLogout,
     requireLogin,
     requireRole,
-    showDashboard
+    showDashboard,
+    showUsersPage
 };

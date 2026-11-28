@@ -7,6 +7,13 @@
     <p>Name: <%= name %></p>
     <p>Username: <%= email %></p>
 
+    <%# Only admins see the link to the users page (user is set in server.js) %>
+    <% if (user && user.role_name === 'admin') { %>
+        <div class="page-actions">
+            <a class="btn btn-primary" href="/users">View All Users</a>
+        </div>
+    <% } %>
+
 </main>
 
 <%- include('partials/footer') %>

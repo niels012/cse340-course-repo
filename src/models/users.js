@@ -89,4 +89,22 @@ const authenticateUser = async (email, password) => {
     return user;
 };
 
-export { createUser, authenticateUser };
+/**
+ * Gets every registered user with the name of their role.
+ * The password hash is never selected.
+ * @returns {Promise<Array<{user_id: number, name: string, email: string, role_name: string, created_at: Date}>>}
+ */
+const getAllUsers = async () => {
+    const query = `
+        SELECT u.user_id, u.name, u.email, r.role_name, u.created_at
+        FROM public.users u
+        LEFT JOIN public.roles r ON u.role_id = r.role_id
+        ORDER BY u.name ASC
+    `;
+
+    const result = await db.query(query);
+
+    return result.rows;
+};
+
+export { createUser, authenticateUser, getAllUsers };

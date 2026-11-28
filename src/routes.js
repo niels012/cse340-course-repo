@@ -32,7 +32,8 @@ import {
     processLogout,
     requireLogin,
     requireRole,
-    showDashboard
+    showDashboard,
+    showUsersPage
 } from './controllers/users.js';
 
 const router = express.Router();
@@ -99,6 +100,9 @@ router.get('/logout', processLogout);
 
 // Protected dashboard route (requireLogin runs first, so only logged-in users reach showDashboard)
 router.get('/dashboard', requireLogin, showDashboard);
+
+// Admin-only users list (non-admins are redirected to the dashboard by requireRole)
+router.get('/users', requireRole('admin'), showUsersPage);
 
 // error-handling routes
 router.get('/test-error', testErrorPage);
