@@ -3,17 +3,60 @@
 <main>
     <h1><%= title %></h1>
 
-    <h2>Dashboard</h2>
-    <p>Name: <%= name %></p>
-    <p>Username: <%= email %></p>
+    <% const isAdmin = user && user.role_name === 'admin'; %>
 
-    <%# Only admins see the link to the users page (user is set in server.js) %>
-    <% if (user && user.role_name === 'admin') { %>
-        <div class="page-actions">
-            <a class="btn btn-primary" href="/users">View All Users</a>
+    <section class="dashboard-welcome" aria-labelledby="welcome-heading">
+        <span class="dashboard-avatar" aria-hidden="true"><%= (name || '?').trim().charAt(0).toUpperCase() %></span>
+        <div>
+            <p class="dashboard-eyebrow">Welcome back</p>
+            <h2 id="welcome-heading" class="dashboard-name"><%= name %></h2>
         </div>
-    <% } %>
+    </section>
 
+    <div class="dashboard-grid">
+        <section class="dash-card" aria-labelledby="account-heading">
+            <h3 id="account-heading">Your Account</h3>
+            <dl class="profile-list">
+                <div>
+                    <dt>Name</dt>
+                    <dd><%= name %></dd>
+                </div>
+                <div>
+                    <dt>Username</dt>
+                    <dd><%= email %></dd>
+                </div>
+                <div>
+                    <dt>Role</dt>
+                    <dd><span class="role-badge role-<%= role || 'none' %>"><%= role || 'none' %></span></dd>
+                </div>
+            </dl>
+        </section>
+
+        <section class="dash-card" aria-labelledby="explore-heading">
+            <h3 id="explore-heading">Explore</h3>
+            <ul class="dash-links">
+                <li><a href="/projects">Upcoming service projects <span aria-hidden="true">&rarr;</span></a></li>
+                <li><a href="/organizations">Partner organizations <span aria-hidden="true">&rarr;</span></a></li>
+                <li><a href="/categories">Service categories <span aria-hidden="true">&rarr;</span></a></li>
+            </ul>
+        </section>
+
+        <%# Only admins see the admin tools, including the link to the users page (user is set in server.js) %>
+        <% if (isAdmin) { %>
+            <section class="dash-card dash-card-admin" aria-labelledby="admin-heading">
+                <h3 id="admin-heading">Admin Tools</h3>
+                <p class="dash-card-text">Manage the people and content of the CSE 340 Service Network.</p>
+                <div class="dash-actions">
+                    <a class="btn btn-primary" href="/users">View All Users</a>
+                    <a class="btn btn-outline" href="/new-organization">Add Organization</a>
+                    <a class="btn btn-outline" href="/new-project">Add Project</a>
+                    <a class="btn btn-outline" href="/new-category">Add Category</a>
+                </div>
+            </section>
+        <% } %>
+    </div>
+
+    <p><a class="back-link" href="/logout">Log out</a></p>
 </main>
 
 <%- include('partials/footer') %>
